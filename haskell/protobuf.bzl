@@ -177,7 +177,6 @@ _haskell_proto_aspect = aspect(
   },
   attr_aspects = ['deps'],
   toolchains = [
-    "@bazel_tools//tools/cpp:toolchain_type",
     "@io_tweag_rules_haskell//haskell:toolchain",
     "@io_tweag_rules_haskell//protobuf:toolchain",
   ],
