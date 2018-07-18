@@ -2,7 +2,7 @@ DefaultCompileInfo = provider(
   doc = "Default compilation files and configuration.",
   fields = {
     "args": "Default argument list.",
-    "haddock_args": "Default Haddock argument list.",
+    "ghc_args": "Arguments that were used to compile the package.",
     "inputs": "Default inputs.",
     "outputs": "Default outputs.",
     "objects_dir": "Object files directory.",
@@ -16,7 +16,7 @@ DefaultCompileInfo = provider(
     "source_files": "Set of files that contain Haskell modules.",
     "extra_source_files": "A depset of non-Haskell source files.",
     "import_dirs": "Import hierarchy roots.",
-    "env": "Default env vars."
+    "env": "Default env vars.",
   },
 )
 
@@ -27,6 +27,7 @@ HaskellBuildInfo = provider(
     "package_confs": "Set of package .conf files.",
     "package_caches": "Set of package cache files.",
     "static_libraries": "Ordered collection of compiled library archives.",
+    "static_libraries_prof": "Ordered collection of static libraries with profiling.",
     "dynamic_libraries": "Set of dynamic libraries.",
     "interface_files": "Set of interface files belonging to the packages.",
     "prebuilt_dependencies": "Transitive collection of names of wired-in Haskell dependencies.",
@@ -43,20 +44,30 @@ HaskellLibraryInfo = provider(
     "import_dirs": "Import hierarchy roots.",
     "exposed_modules": "Set of exposed module names.",
     "other_modules": "Set of non-public module names.",
-    "haddock_args": "Arguments that were used to compile the package suitable for Haddock.",
     "header_files": "Set of header files.",
     "boot_files": "Set of boot files.",
     "source_files": "Set of files that contain Haskell modules.",
     "extra_source_files": "A depset of non-Haskell source files.",
+    "ghc_args": "Arguments that were used to compile the package.",
   },
 )
 
 HaskellBinaryInfo = provider(
   doc = "Binary-specific information.",
   fields = {
+    "import_dirs": "Import hierarchy roots.",
     "source_files": "Set of source files.",
     "modules": "Set of module names.",
     "binary": "File, compiled binary.",
+    "header_files": "Set of header files.",
+    "ghc_args": "Arguments that were used to compile the binary.",
+  },
+)
+
+HaskellPrebuiltPackageInfo = provider(
+  doc = "Information about a prebuilt GHC package.",
+  fields = {
+    "package": "Package name",
   },
 )
 

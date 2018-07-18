@@ -23,7 +23,17 @@ haskell_toolchain(
   compiler_flags = [
       "-XStandaloneDeriving", # Flag used at compile time
       "-threaded",            # Flag used at link time
+
+     # Used by `tests/repl-flags`
+      "-DTESTS_TOOLCHAIN_COMPILER_FLAGS",
+      "-XNoOverloadedStrings", # this is the default, so it does not harm other tests
   ],
+
+  repl_ghci_args = [
+      # Used by `tests/repl-flags`
+      "-UTESTS_TOOLCHAIN_REPL_FLAGS", # The repl test will need this flag, but set by the local `repl_ghci_args`.
+      "-XOverloadedStrings" # The repl test will need OverloadedString
+     ],
   locale_archive = select({
     # For some reason glibcLocales is not available on Darwin.
     "@bazel_tools//src/conditions:darwin": None,
@@ -173,9 +183,9 @@ rule_test(
 rule_test(
   name = "test-haskell_doctest",
   generates = [
-    "doctest-log-lib-b",
+    "doctest-log-doctest-lib-testsZShaskellZUdoctestZSlib-b-1.0.0",
   ],
-  rule = "//tests/haskell_doctest:haskell_doctest",
+  rule = "//tests/haskell_doctest:doctest-lib",
   size = "small",
 )
 

@@ -55,6 +55,11 @@ test_bazel_test()
     bazel test //... --config=ci
 }
 
+test_bazel_test_prof()
+{
+    bazel test -c dbg //... --config=ci
+}
+
 test_failures() {
     # Test targets that must fail
     for i in $(bazel query 'kind(rule, //tests/failures/...) intersect attr("tags", "manual", //tests/failures/...)')
@@ -73,6 +78,18 @@ test_repl_libraries() {
 test_repl_binaries() {
     bazel build --config=ci //tests/repl-targets:hs-bin-repl
     bazel-bin/tests/repl-targets/hs-bin-repl -e ":main"
+}
+
+# Test `compiler_flags` from toolchain and rule for REPL
+test_repl_compiler_flags() {
+    # `compiler_flags` from toolchain are correctly used
+    bazel run --config=ci //tests/repl-flags:compiler_flags-repl -- -e ":main"
+}
+
+# Test `repl_ghci_args` from toolchain and rule for REPL
+test_repl_flags() {
+    # `compiler_flags` from toolchain are correctly used
+    bazel run --config=ci //tests/repl-flags:repl_flags-repl -- -e "foo"
 }
 
 # Test start script

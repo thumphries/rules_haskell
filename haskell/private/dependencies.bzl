@@ -3,6 +3,7 @@ load(":private/providers.bzl",
   "HaskellBuildInfo",
   "HaskellBinaryInfo",
   "HaskellLibraryInfo",
+  "HaskellPrebuiltPackageInfo",
   "CcSkylarkApiProviderHacked",
 )
 load(":private/set.bzl", "set")
@@ -69,6 +70,7 @@ def gather_dep_info(ctx):
     package_confs = set.empty(),
     package_caches = set.empty(),
     static_libraries = [],
+    static_libraries_prof = [],
     dynamic_libraries = set.empty(),
     interface_files = set.empty(),
     prebuilt_dependencies = set.from_list(ctx.attr.prebuilt_dependencies),
@@ -89,11 +91,26 @@ def gather_dep_info(ctx):
         package_confs = set.mutable_union(acc.package_confs, binfo.package_confs),
         package_caches = set.mutable_union(acc.package_caches, binfo.package_caches),
         static_libraries = acc.static_libraries + binfo.static_libraries,
+        static_libraries_prof = acc.static_libraries_prof + binfo.static_libraries_prof,
         dynamic_libraries = set.mutable_union(acc.dynamic_libraries, binfo.dynamic_libraries),
         interface_files = set.mutable_union(acc.interface_files, binfo.interface_files),
         prebuilt_dependencies = set.mutable_union(acc.prebuilt_dependencies, binfo.prebuilt_dependencies),
         external_libraries = dicts.add(acc.external_libraries, binfo.external_libraries),
         direct_prebuilt_deps = acc.direct_prebuilt_deps,
+      )
+    elif HaskellPrebuiltPackageInfo in dep:
+      pkg = dep[HaskellPrebuiltPackageInfo].package
+      acc = HaskellBuildInfo(
+        package_ids = acc.package_ids,
+        package_confs = acc.package_confs,
+        package_caches = acc.package_caches,
+        static_libraries = acc.static_libraries,
+        static_libraries_prof = acc.static_libraries_prof,
+        dynamic_libraries = acc.dynamic_libraries,
+        interface_files = acc.interface_files,
+        prebuilt_dependencies = set.mutable_insert(acc.prebuilt_dependencies, pkg),
+        external_libraries = acc.external_libraries,
+        direct_prebuilt_deps = set.mutable_insert(acc.direct_prebuilt_deps, pkg),
       )
     else:
       # If not a Haskell dependency, pass it through as-is to the
@@ -103,6 +120,7 @@ def gather_dep_info(ctx):
         package_confs = acc.package_confs,
         package_caches = acc.package_caches,
         static_libraries = acc.static_libraries,
+        static_libraries_prof = acc.static_libraries_prof,
         dynamic_libraries = acc.dynamic_libraries,
         interface_files = acc.interface_files,
         prebuilt_dependencies = acc.prebuilt_dependencies,
