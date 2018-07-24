@@ -32,6 +32,7 @@ haskell_library(
     deps = [
         ":lib-a",
         "//tests:base",
+        "//tests:lens-labels", # a dependency no builtin with GHC to make doctest fail
     ],
 )
 
