@@ -16,4 +16,5 @@ do
     extra_args+=("--read-interface=$haddock_html,$haddock_interfaces")
 done
 
-haddock "${extra_args[@]}" "$@"
+/usr/bin/mkdir haddock-tmp
+TMPDIR=haddock-tmp haddock "${extra_args[@]}" "$@"
