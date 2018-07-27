@@ -16,5 +16,10 @@ do
     extra_args+=("--read-interface=$haddock_html,$haddock_interfaces")
 done
 
-/usr/bin/mkdir haddock-tmp
-TMPDIR=haddock-tmp haddock "${extra_args[@]}" "$@"
+# Override TMPDIR to prevent race conditions on certain platforms.
+mkdir haddock-tmp
+TMPDIR=haddock-tmp
+
+haddock "${extra_args[@]}" "$@"
+
+rmdir haddock-tmp
